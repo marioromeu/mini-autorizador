@@ -27,6 +27,11 @@ public class TransactionDTO {
   /**
    * 
    */
-  private String senha;  
+  private String senhaCartao;  
+  
+  /**
+   * 
+   */
+  private Double valor;
   
 }

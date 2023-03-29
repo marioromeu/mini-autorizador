@@ -29,8 +29,7 @@ public class TransactionController implements TransactionControllerInterface {
   /**
    * 
    */
-  public ResponseEntity<TransactionResponse> createNewTransaction(
-      MultiValueMap<String, String> header, TransactionDTO body) {
+  public ResponseEntity<TransactionResponse> createNewTransaction(MultiValueMap<String, String> header, TransactionDTO body) {
 
     ResponseEntity<TransactionResponse> responseEntity;
 

@@ -131,9 +131,9 @@ public abstract class SecurityUtils {
    */
   public static Boolean isPasswordValid(String cardPassword, String password) throws PasswordInvalidException {
 
-    String encryptedPassword = SecurityUtils.encrypt( cardPassword );
+    String encryptedPassword = SecurityUtils.encrypt( password );
 
-    if (!password.equals(encryptedPassword)) {
+    if (!cardPassword.equals(encryptedPassword)) {
     
       throw new PasswordInvalidException() ;
      

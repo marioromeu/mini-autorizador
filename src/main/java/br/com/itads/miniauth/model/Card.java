@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import br.com.itads.miniauth.exception.NoRefundsException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,5 +50,13 @@ public class Card {
    */
   @Column(nullable = false)
   private String password;  
+  
+  /**
+   * 
+   * @param value
+   */
+  public void debit(Double value) throws NoRefundsException {
+    funds -= value;
+  }
   
 }

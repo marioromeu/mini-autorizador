@@ -26,32 +26,41 @@ public class TransactionServiceImpl implements TransactionService {
    */
   @Autowired
   private CardService cardService;
-  
+
   /**
    * 
-   */  
+   */
   public void createNewTransaction(TransactionDTO dto) throws TransactionNotAllowedException {
 
     try {
 
       Card card = cardService.findCardByNumber(dto.getNumeroCartao());
-      
-      SecurityUtils.isPasswordValid(card.getPassword(), dto.getSenha());
-     
-      //TODO colocar a lógica do controle da transação
-      throw new NoRefundsException();
-      
-    }catch (PasswordInvalidException e1) {
-      throw new TransactionNotAllowedException();          
-      
+
+      SecurityUtils.isPasswordValid(card.getPassword(), dto.getSenhaCartao());
+
+      processTransaction(card, dto.getValor());
+
+    } catch (PasswordInvalidException e1) {
+      throw new TransactionNotAllowedException();
+
     } catch (CardNotFoundException e2) {
       throw new TransactionNotAllowedException();
-      
+
     } catch (NoRefundsException e3) {
-      throw new TransactionNotAllowedException();      
+      throw new TransactionNotAllowedException();
 
     }
-    
+
   }
-  
+
+  /**
+   * 
+   */
+  private synchronized void processTransaction(Card card, Double valueOfTransaction)
+      throws NoRefundsException {
+
+    card.debit(valueOfTransaction);
+
+  }
+
 }

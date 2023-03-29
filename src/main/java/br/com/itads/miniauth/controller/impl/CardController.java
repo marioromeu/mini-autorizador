@@ -12,6 +12,7 @@ import br.com.itads.miniauth.exception.CardNotFoundException;
 import br.com.itads.miniauth.model.Card;
 import br.com.itads.miniauth.responses.CardResponse;
 import br.com.itads.miniauth.services.interfaces.CardService;
+import br.com.itads.miniauth.util.SecurityUtils;
 
 /**
  * 
@@ -39,19 +40,22 @@ public class CardController implements CardControllerInterface {
 
     try {
 
+      String encriptedPassword = SecurityUtils.encrypt(body.getSenha());
+      body.setSenha(encriptedPassword);
+      
       service.createNewCard(body);
-
+      
       CardResponse cardResponse =
           CardResponse.builder()
-          .senha(body.getSenha())
+          .senha(encriptedPassword)
           .numeroCartao(body.getNumeroCartao())
           .build();
 
-      responseEntity = new ResponseEntity<CardResponse>(cardResponse, HttpStatus.OK);
+      responseEntity = new ResponseEntity<CardResponse>(cardResponse, HttpStatus.CREATED);
 
     } catch (CardAlreadyExists e) {
 
-      responseEntity = new ResponseEntity<CardResponse>(HttpStatus.NOT_FOUND);
+      responseEntity = new ResponseEntity<CardResponse>(HttpStatus.UNPROCESSABLE_ENTITY);
 
     }
 

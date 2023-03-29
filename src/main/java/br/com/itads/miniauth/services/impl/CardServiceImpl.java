@@ -1,6 +1,7 @@
 package br.com.itads.miniauth.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import br.com.itads.miniauth.dto.CardDTO;
 import br.com.itads.miniauth.exception.CardAlreadyExists;
@@ -35,7 +36,11 @@ public class CardServiceImpl implements CardService {
         .password(cardDTO.getSenha())
         .build();
     
-    repository.save(card);
+    try {
+      repository.save(card);
+    } catch (DataIntegrityViolationException e) {
+      throw new CardAlreadyExists();
+    }
 
   }
 
@@ -43,7 +48,20 @@ public class CardServiceImpl implements CardService {
    * 
    */
   public Card findCardByNumber(String cardNumber) throws CardNotFoundException {
-    return repository.findCardByNumber(cardNumber);
+    
+    Card card = null;
+    
+    try {
+      card = repository.findCardByNumber(cardNumber);
+      card.getId();//TODO Melhorar
+
+    } catch (NullPointerException e) {
+      throw new CardNotFoundException();
+
+    }
+    
+    return card; 
+    
   }
 
 }
