@@ -3,6 +3,7 @@ package br.com.itads.miniauth.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.com.itads.miniauth.dto.TransactionDTO;
+import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.CardNotFoundException;
 import br.com.itads.miniauth.exception.InvalidCardFormatException;
 import br.com.itads.miniauth.exception.NoRefundsException;
@@ -29,9 +30,10 @@ public class TransactionServiceImpl implements TransactionService {
   private CardService cardService;
 
   /**
+   * @throws CardAlreadyExistsException 
    * 
    */
-  public void createNewTransaction(TransactionDTO dto) throws TransactionNotAllowedException {
+  public void createNewTransaction(TransactionDTO dto) throws TransactionNotAllowedException, CardAlreadyExistsException {
 
     try {
 
@@ -48,12 +50,16 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   /**
+   * @throws InvalidCardFormatException 
+   * @throws CardAlreadyExistsException 
    * 
    */
   private synchronized void processTransaction(Card card, Double valueOfTransaction)
-      throws NoRefundsException {
+      throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
 
     card.debit(valueOfTransaction);
+    
+    cardService.debitValue(card);
 
   }
 

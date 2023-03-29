@@ -7,6 +7,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.itads.miniauth.controller.interfaces.TransactionControllerInterface;
 import br.com.itads.miniauth.dto.TransactionDTO;
+import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.TransactionNotAllowedException;
 import br.com.itads.miniauth.responses.TransactionResponse;
 import br.com.itads.miniauth.services.interfaces.TransactionService;
@@ -37,11 +38,11 @@ public class TransactionController implements TransactionControllerInterface {
 
       service.createNewTransaction(body);
 
-      responseEntity = new ResponseEntity<TransactionResponse>(HttpStatus.OK);
+      responseEntity = new ResponseEntity<TransactionResponse>(HttpStatus.CREATED);
 
-    } catch (TransactionNotAllowedException e) {
+    } catch (TransactionNotAllowedException | CardAlreadyExistsException e) {
 
-      responseEntity = new ResponseEntity<TransactionResponse>(HttpStatus.NOT_FOUND);
+      responseEntity = new ResponseEntity<TransactionResponse>(HttpStatus.UNPROCESSABLE_ENTITY);
 
     }
 

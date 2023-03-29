@@ -7,6 +7,7 @@ import br.com.itads.miniauth.dto.CardDTO;
 import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.CardNotFoundException;
 import br.com.itads.miniauth.exception.InvalidCardFormatException;
+import br.com.itads.miniauth.exception.NoRefundsException;
 import br.com.itads.miniauth.model.Card;
 import br.com.itads.miniauth.repository.CardRepository;
 import br.com.itads.miniauth.services.interfaces.CardService;
@@ -85,6 +86,25 @@ public class CardServiceImpl implements CardService {
 
     return bool;
 
+  }
+
+  /**
+   * 
+   */
+  @Override
+  public void debitValue(Card card)
+      throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
+
+    isValidCardFormat(card.getNumber());
+
+    try {
+      repository.save(card);
+
+    } catch (DataIntegrityViolationException e) {
+      throw new CardAlreadyExistsException();
+
+    }
+    
   }
 
 }
