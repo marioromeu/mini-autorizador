@@ -3,6 +3,7 @@ package br.com.itads.miniauth.controller.interfaces;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,7 @@ public interface CardControllerInterface {
           @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CardResponse.class))) 
       }
   )
-  @RequestMapping(value = "/cartoes", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
+  @PostMapping(value = "/cartoes", produces = { "application/json" }, consumes = { "application/json" })
   ResponseEntity<CardResponse> createNewCard(
       @RequestHeader(value = "header", required = true) MultiValueMap<String, String> header,
       @RequestBody CardDTO body);

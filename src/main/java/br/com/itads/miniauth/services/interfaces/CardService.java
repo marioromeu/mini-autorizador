@@ -1,8 +1,9 @@
 package br.com.itads.miniauth.services.interfaces;
 
 import br.com.itads.miniauth.dto.CardDTO;
-import br.com.itads.miniauth.exception.CardAlreadyExists;
+import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.CardNotFoundException;
+import br.com.itads.miniauth.exception.InvalidCardFormatException;
 import br.com.itads.miniauth.model.Card;
 
 /**
@@ -16,15 +17,17 @@ public interface CardService {
   /**
    * 
    * @param cardDTO
+   * @throws InvalidCardFormatException 
    * @throws CardAlreadyExists
    */
-  void createNewCard(CardDTO cardDTO) throws CardAlreadyExists;
+  void createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException;
   
   /**
    * 
    * @param numeroCartao
    * @return
+   * @throws InvalidCardFormatException 
    */
-  Card findCardByNumber(String cardNumber) throws CardNotFoundException;
+  Card findCardByNumber(String cardNumber) throws CardNotFoundException, InvalidCardFormatException;
   
 }

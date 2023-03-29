@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import br.com.itads.miniauth.dto.CardDTO;
-import br.com.itads.miniauth.exception.CardAlreadyExists;
+import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.CardNotFoundException;
+import br.com.itads.miniauth.exception.InvalidCardFormatException;
 import br.com.itads.miniauth.model.Card;
 import br.com.itads.miniauth.repository.CardRepository;
 import br.com.itads.miniauth.services.interfaces.CardService;
@@ -24,44 +25,66 @@ public class CardServiceImpl implements CardService {
    */
   @Autowired
   private CardRepository repository;
-  
+
   /**
+   * @throws InvalidCardFormatException 
    * 
    */
-  public void createNewCard(CardDTO cardDTO) throws CardAlreadyExists {
+  public void createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException {
 
-    Card card = Card.builder()
-        .funds(500d)        
-        .number(cardDTO.getNumeroCartao())        
-        .password(cardDTO.getSenha())
-        .build();
+    isValidCardFormat(cardDTO.getNumeroCartao());
     
+    Card card = Card.builder().funds(500d).number(cardDTO.getNumeroCartao())
+        .password(cardDTO.getSenha()).build();
+
     try {
       repository.save(card);
+
     } catch (DataIntegrityViolationException e) {
-      throw new CardAlreadyExists();
+      throw new CardAlreadyExistsException();
+
     }
 
   }
 
   /**
+   * @throws InvalidCardFormatException 
    * 
    */
-  public Card findCardByNumber(String cardNumber) throws CardNotFoundException {
+  public Card findCardByNumber(String cardNumber) throws CardNotFoundException, InvalidCardFormatException {
     
     Card card = null;
+
+    isValidCardFormat(cardNumber);
     
     try {
       card = repository.findCardByNumber(cardNumber);
-      card.getId();//TODO Melhorar
+      card.getId();// TODO Melhorar
 
     } catch (NullPointerException e) {
       throw new CardNotFoundException();
 
     }
-    
-    return card; 
-    
+
+    return card;
+
+  }
+
+  /**
+   * @return
+   * @throws InvalidCardFormatException
+   * 
+   */
+  private Boolean isValidCardFormat(String cardNumber) throws InvalidCardFormatException {
+
+    Boolean bool = cardNumber.matches("^\\d+$");
+
+    if (!bool) {
+      throw new InvalidCardFormatException();
+    }
+
+    return bool;
+
   }
 
 }

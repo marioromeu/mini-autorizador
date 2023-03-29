@@ -7,8 +7,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.itads.miniauth.controller.interfaces.CardControllerInterface;
 import br.com.itads.miniauth.dto.CardDTO;
-import br.com.itads.miniauth.exception.CardAlreadyExists;
+import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.CardNotFoundException;
+import br.com.itads.miniauth.exception.InvalidCardFormatException;
 import br.com.itads.miniauth.model.Card;
 import br.com.itads.miniauth.responses.CardResponse;
 import br.com.itads.miniauth.services.interfaces.CardService;
@@ -53,7 +54,7 @@ public class CardController implements CardControllerInterface {
 
       responseEntity = new ResponseEntity<CardResponse>(cardResponse, HttpStatus.CREATED);
 
-    } catch (CardAlreadyExists e) {
+    } catch (CardAlreadyExistsException | InvalidCardFormatException e) {
 
       responseEntity = new ResponseEntity<CardResponse>(HttpStatus.UNPROCESSABLE_ENTITY);
 
@@ -77,7 +78,7 @@ public class CardController implements CardControllerInterface {
 
       responseEntity = new ResponseEntity<Double>(card.getFunds(), HttpStatus.OK);
 
-    } catch (CardNotFoundException e) {
+    } catch (CardNotFoundException | InvalidCardFormatException e) {
 
       responseEntity = new ResponseEntity<Double>(HttpStatus.NOT_FOUND);
 

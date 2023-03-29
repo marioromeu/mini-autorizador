@@ -1,5 +1,6 @@
 package br.com.itads.miniauth.repository;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import br.com.itads.miniauth.model.Card;
@@ -23,6 +24,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   /**
    * 
    */
-  Card save(Card card);
+  Card save(Card card) throws DataIntegrityViolationException;
   
 }

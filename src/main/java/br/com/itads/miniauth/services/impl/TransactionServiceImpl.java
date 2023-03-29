@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.com.itads.miniauth.dto.TransactionDTO;
 import br.com.itads.miniauth.exception.CardNotFoundException;
+import br.com.itads.miniauth.exception.InvalidCardFormatException;
 import br.com.itads.miniauth.exception.NoRefundsException;
 import br.com.itads.miniauth.exception.PasswordInvalidException;
 import br.com.itads.miniauth.exception.TransactionNotAllowedException;
@@ -40,15 +41,8 @@ public class TransactionServiceImpl implements TransactionService {
 
       processTransaction(card, dto.getValor());
 
-    } catch (PasswordInvalidException e1) {
+    } catch (PasswordInvalidException | CardNotFoundException | NoRefundsException | InvalidCardFormatException e) {
       throw new TransactionNotAllowedException();
-
-    } catch (CardNotFoundException e2) {
-      throw new TransactionNotAllowedException();
-
-    } catch (NoRefundsException e3) {
-      throw new TransactionNotAllowedException();
-
     }
 
   }

@@ -4,13 +4,12 @@ package br.com.itads.miniauth.exception;
  * 
  * @author marioromeu
  * @email mario.romeu@gmail.com
- *
  */
-public class CardAlreadyExists extends Exception {
+public class InvalidCardFormatException extends Exception {
 
   /**
    * 
    */
-  private static final long serialVersionUID = -3097845177614644464L;
+  private static final long serialVersionUID = -1627884457449876423L;
 
 }

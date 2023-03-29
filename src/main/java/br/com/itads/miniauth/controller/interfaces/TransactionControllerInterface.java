@@ -2,10 +2,9 @@ package br.com.itads.miniauth.controller.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import br.com.itads.miniauth.dto.TransactionDTO;
 import br.com.itads.miniauth.responses.TransactionResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +34,7 @@ public interface TransactionControllerInterface {
           @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionResponse.class))) 
       }
   )
-  @RequestMapping(value = "/transacoes", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
+  @PostMapping(value = "/transacoes", produces = { "application/json" }, consumes = { "application/json" })
   ResponseEntity<TransactionResponse> createNewTransaction(
       @RequestHeader(value = "header", required = true) MultiValueMap<String, String> header,
       @RequestBody TransactionDTO body);
