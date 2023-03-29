@@ -1,0 +1,26 @@
+server:
+  port: 8080
+    
+spring:
+  application:
+    name: miniautorizador
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/miniautorizador}
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+
+    
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs    
+    
