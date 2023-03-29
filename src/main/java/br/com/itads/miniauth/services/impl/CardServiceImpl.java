@@ -33,19 +33,12 @@ public class CardServiceImpl implements CardService {
    */
   public void createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException {
 
-    isValidCardFormat(cardDTO.getNumeroCartao());
-    
+
     Card card = Card.builder().funds(500d).number(cardDTO.getNumeroCartao())
         .password(cardDTO.getSenha()).build();
-
-    try {
-      repository.save(card);
-
-    } catch (DataIntegrityViolationException e) {
-      throw new CardAlreadyExistsException();
-
-    }
-
+    
+    save(card);
+    
   }
 
   /**
@@ -95,8 +88,19 @@ public class CardServiceImpl implements CardService {
   public void debitValue(Card card)
       throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
 
-    isValidCardFormat(card.getNumber());
+    save(card);
+    
+  }
+  
+  /**
+   * @throws InvalidCardFormatException 
+   * @throws CardAlreadyExistsException 
+   * 
+   */
+  private void save(Card card) throws InvalidCardFormatException, CardAlreadyExistsException {
 
+    isValidCardFormat(card.getNumber());
+    
     try {
       repository.save(card);
 
@@ -104,7 +108,6 @@ public class CardServiceImpl implements CardService {
       throw new CardAlreadyExistsException();
 
     }
-    
   }
 
 }

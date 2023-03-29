@@ -56,6 +56,9 @@ public class Card {
    * @param value
    */
   public void debit(Double value) throws NoRefundsException {
+    if (value > funds) {
+      throw new NoRefundsException();
+    }
     funds -= value;
   }
   
