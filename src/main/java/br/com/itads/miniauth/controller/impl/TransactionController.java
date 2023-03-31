@@ -7,9 +7,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.itads.miniauth.controller.interfaces.TransactionControllerInterface;
 import br.com.itads.miniauth.dto.TransactionDTO;
-import br.com.itads.miniauth.exception.CardAlreadyExistsException;
+import br.com.itads.miniauth.enums.TransactionEnum;
+import br.com.itads.miniauth.exception.CardNotFoundException;
+import br.com.itads.miniauth.exception.NoRefundsException;
+import br.com.itads.miniauth.exception.PasswordInvalidException;
 import br.com.itads.miniauth.exception.TransactionNotAllowedException;
-import br.com.itads.miniauth.responses.TransactionResponse;
 import br.com.itads.miniauth.services.interfaces.TransactionService;
 
 /**
@@ -30,22 +32,29 @@ public class TransactionController implements TransactionControllerInterface {
   /**
    * 
    */
-  public ResponseEntity<TransactionResponse> createNewTransaction(MultiValueMap<String, String> header, TransactionDTO body) {
+  public ResponseEntity<TransactionEnum> createNewTransaction(MultiValueMap<String, String> header, TransactionDTO body) {
 
-    ResponseEntity<TransactionResponse> responseEntity;
+    ResponseEntity<TransactionEnum> responseEntity;
 
     try {
 
       service.createNewTransaction(body);
 
-      responseEntity = new ResponseEntity<TransactionResponse>(HttpStatus.CREATED);
+      responseEntity = new ResponseEntity<TransactionEnum>(TransactionEnum.OK, HttpStatus.CREATED);
 
-    } catch (TransactionNotAllowedException | CardAlreadyExistsException e) {
-
-      responseEntity = new ResponseEntity<TransactionResponse>(HttpStatus.UNPROCESSABLE_ENTITY);
-
+    } catch (CardNotFoundException e) {
+      responseEntity = new ResponseEntity<TransactionEnum>(TransactionEnum.CARTAO_INEXISTENTE, HttpStatus.UNPROCESSABLE_ENTITY);
+      
+    } catch (PasswordInvalidException e) {
+      responseEntity = new ResponseEntity<TransactionEnum>(TransactionEnum.SENHA_INVALIDA, HttpStatus.UNPROCESSABLE_ENTITY);
+      
+    } catch (NoRefundsException e) {
+      responseEntity = new ResponseEntity<TransactionEnum>(TransactionEnum.SALDO_INSUFICIENTE, HttpStatus.UNPROCESSABLE_ENTITY);
+      
+    } catch (TransactionNotAllowedException e) {
+      responseEntity = new ResponseEntity<TransactionEnum>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
+    
     return responseEntity;
 
   }

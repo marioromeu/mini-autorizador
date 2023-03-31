@@ -7,7 +7,7 @@ package br.com.itads.miniauth.enums;
  *
  */
 public enum TransactionEnum {
-
+  OK,
   SALDO_INSUFICIENTE,
   SENHA_INVALIDA,
   CARTAO_INEXISTENTE

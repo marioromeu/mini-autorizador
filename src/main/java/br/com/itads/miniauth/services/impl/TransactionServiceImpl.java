@@ -30,10 +30,16 @@ public class TransactionServiceImpl implements TransactionService {
   private CardService cardService;
 
   /**
-   * @throws CardAlreadyExistsException 
+   * @throws CardAlreadyExistsException
+   * @throws InvalidCardFormatException
+   * @throws CardNotFoundException
+   * @throws PasswordInvalidException
+   * @throws NoRefundsException
+   * @throws TransactionNotAllowedException 
    * 
    */
-  public void createNewTransaction(TransactionDTO dto) throws TransactionNotAllowedException, CardAlreadyExistsException {
+  public void createNewTransaction(TransactionDTO dto)
+      throws CardNotFoundException, PasswordInvalidException, NoRefundsException, TransactionNotAllowedException {
 
     try {
 
@@ -41,24 +47,35 @@ public class TransactionServiceImpl implements TransactionService {
 
       SecurityUtils.isPasswordValid(card.getPassword(), dto.getSenhaCartao());
 
-      processTransaction(card, dto.getValor());
+      /**
+       * Se ha recurso...
+       */
+      if (card.getFunds() > dto.getValor()) {
+        processTransaction(card, dto.getValor());
+      } else {
+        throw new NoRefundsException();
+      }
 
-    } catch (PasswordInvalidException | CardNotFoundException | NoRefundsException | InvalidCardFormatException e) {
+    } catch (InvalidCardFormatException e) {
       throw new TransactionNotAllowedException();
+
+    } catch (CardAlreadyExistsException e) {
+      throw new TransactionNotAllowedException();
+
     }
 
   }
 
   /**
-   * @throws InvalidCardFormatException 
-   * @throws CardAlreadyExistsException 
+   * @throws InvalidCardFormatException
+   * @throws CardAlreadyExistsException
    * 
    */
   private synchronized void processTransaction(Card card, Double valueOfTransaction)
       throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
 
     card.debit(valueOfTransaction);
-    
+
     cardService.debitValue(card);
 
   }

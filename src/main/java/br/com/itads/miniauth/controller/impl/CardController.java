@@ -39,24 +39,31 @@ public class CardController implements CardControllerInterface {
 
     ResponseEntity<CardResponse> responseEntity = null;
 
-    try {
+    CardResponse cardResponse = null;
+    
 
-      String encriptedPassword = SecurityUtils.encrypt(body.getSenha());
+    String cleanPassword = body.getSenha();
+    
+    try {
+   
+      String encriptedPassword = SecurityUtils.encrypt(cleanPassword);      
+      
       body.setSenha(encriptedPassword);
       
-      service.createNewCard(body);
-      
-      CardResponse cardResponse =
+      cardResponse =
           CardResponse.builder()
           .senha(encriptedPassword)
           .numeroCartao(body.getNumeroCartao())
           .build();
-
+      
+      service.createNewCard(body);
+      
       responseEntity = new ResponseEntity<CardResponse>(cardResponse, HttpStatus.CREATED);
 
     } catch (CardAlreadyExistsException | InvalidCardFormatException e) {
 
-      responseEntity = new ResponseEntity<CardResponse>(HttpStatus.UNPROCESSABLE_ENTITY);
+      cardResponse.setSenha(cleanPassword);
+      responseEntity = new ResponseEntity<CardResponse>(cardResponse, HttpStatus.UNPROCESSABLE_ENTITY);
 
     }
 
