@@ -2,6 +2,9 @@ package br.com.itads.miniauth.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import br.com.itads.miniauth.aspect.interfaces.LogExecutionTime;
+import br.com.itads.miniauth.aspect.interfaces.RedisLockTransaction;
+import br.com.itads.miniauth.dto.ProcessTransactionDTO;
 import br.com.itads.miniauth.dto.TransactionDTO;
 import br.com.itads.miniauth.exception.CardAlreadyExistsException;
 import br.com.itads.miniauth.exception.CardNotFoundException;
@@ -51,7 +54,15 @@ public class TransactionServiceImpl implements TransactionService {
        * Se ha recurso...
        */
       if (card.getFunds() > dto.getValor()) {
-        processTransaction(card, dto.getValor());
+        
+        ProcessTransactionDTO processTransactionDTO =
+            ProcessTransactionDTO.builder()
+                              .card(card)
+                              .valueOfTransaction(dto.getValor())
+                              .build();
+        
+        processTransaction(processTransactionDTO);
+
       } else {
         throw new NoRefundsException();
       }
@@ -71,13 +82,26 @@ public class TransactionServiceImpl implements TransactionService {
    * @throws CardAlreadyExistsException
    * 
    */
-  private synchronized void processTransaction(Card card, Double valueOfTransaction)
+  @RedisLockTransaction
+  @LogExecutionTime
+  public void processTransaction(ProcessTransactionDTO dto)
       throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
-
+    System.out.println("Inicio-----------");
+    Card card = dto.getCard();
+    
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    Double valueOfTransaction = dto.getValueOfTransaction();
+    
     card.debit(valueOfTransaction);
 
     cardService.debitValue(card);
-
+    System.out.println("-----------FIM");
   }
 
 }

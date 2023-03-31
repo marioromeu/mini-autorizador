@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("br.com.itads.*")
 @ComponentScan(basePackages = { "br.com.itads.*" })
 @EntityScan("br.com.itads.*")   
+//@EnableCaching
 public class MiniAuthApplication {
 
   /**

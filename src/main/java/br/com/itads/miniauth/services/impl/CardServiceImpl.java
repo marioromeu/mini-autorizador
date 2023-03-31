@@ -1,6 +1,7 @@
 package br.com.itads.miniauth.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import br.com.itads.miniauth.dto.CardDTO;
@@ -33,18 +34,21 @@ public class CardServiceImpl implements CardService {
    */
   public void createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException {
 
+    Card card = Card.builder()
+        .funds(500d)
+        .number(cardDTO.getNumeroCartao())
+        .password(cardDTO.getSenha())
+        .build();
 
-    Card card = Card.builder().funds(500d).number(cardDTO.getNumeroCartao())
-        .password(cardDTO.getSenha()).build();
-    
     save(card);
-    
+
   }
 
   /**
    * @throws InvalidCardFormatException 
    * 
    */
+  @Cacheable(value = "cardCache")
   public Card findCardByNumber(String cardNumber) throws CardNotFoundException, InvalidCardFormatException {
     
     Card card = null;
