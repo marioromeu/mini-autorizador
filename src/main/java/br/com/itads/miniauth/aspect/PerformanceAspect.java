@@ -6,8 +6,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -24,8 +22,6 @@ import org.springframework.stereotype.Component;
  *
  */
 @Aspect
-@Component
-@Async
 public class PerformanceAspect {
 
   /**
@@ -39,7 +35,7 @@ public class PerformanceAspect {
    * @return
    * @throws Throwable
    */
-  @Around("@annotation(br.com.itads.miniauth.aspect.interfaces.LogExecutionTime)")
+  @Around("@annotation(LogExecutionTime)")
   public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 
     long start = System.currentTimeMillis();
@@ -49,7 +45,8 @@ public class PerformanceAspect {
     long executionTime = System.currentTimeMillis() - start;
 
     log.info(joinPoint.getSignature().getName() + " executed in " + executionTime + "ms");
-
+    System.out.println(joinPoint.getSignature().getName() + " executed in " + executionTime + "ms");
+    
     return proceed;
 
   }

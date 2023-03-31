@@ -1,12 +1,11 @@
 package br.com.itads.miniauth.aspect;
 
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import br.com.itads.miniauth.dto.ProcessTransactionDTO;
 
 /**
@@ -16,7 +15,6 @@ import br.com.itads.miniauth.dto.ProcessTransactionDTO;
  *
  */
 @Aspect
-@Component
 public class RedisAspect {
 
   /**
@@ -30,7 +28,13 @@ public class RedisAspect {
    * @return
    * @throws Throwable
    */
-  @Around("@annotation(br.com.itads.miniauth.aspect.interfaces.RedisLockTransaction)")
+  //@Around(value="@annotation(br.com.itads.miniauth.aspect.RedisLockTransaction)")  
+  @Pointcut("@annotation(br.com.itads.miniauth.aspect.RedisLockTransaction)")
+  public void timerPointcut() {
+    System.out.println("aki");
+  }  
+  
+  @Around("timerPointcut() ")
   public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 
     log.debug("Before " + joinPoint.getSignature().getName());
@@ -40,7 +44,7 @@ public class RedisAspect {
     if (proceed instanceof ProcessTransactionDTO) {
 
       //TODO colocar a logica do redis
-      
+
     }
 
     log.debug("After " + joinPoint.getSignature().getName());

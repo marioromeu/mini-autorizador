@@ -2,8 +2,7 @@ package br.com.itads.miniauth.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import br.com.itads.miniauth.aspect.interfaces.LogExecutionTime;
-import br.com.itads.miniauth.aspect.interfaces.RedisLockTransaction;
+import br.com.itads.miniauth.aspect.LogExecutionTime;
 import br.com.itads.miniauth.dto.ProcessTransactionDTO;
 import br.com.itads.miniauth.dto.TransactionDTO;
 import br.com.itads.miniauth.exception.CardAlreadyExistsException;
@@ -25,7 +24,7 @@ import br.com.itads.miniauth.util.SecurityUtils;
  */
 @Service
 public class TransactionServiceImpl implements TransactionService {
-
+  
   /**
    * 
    */
@@ -60,7 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
                               .card(card)
                               .valueOfTransaction(dto.getValor())
                               .build();
-        
+
         processTransaction(processTransactionDTO);
 
       } else {
@@ -82,9 +81,9 @@ public class TransactionServiceImpl implements TransactionService {
    * @throws CardAlreadyExistsException
    * 
    */
-  @RedisLockTransaction
-  @LogExecutionTime
-  public void processTransaction(ProcessTransactionDTO dto)
+  //@RedisLockTransaction
+  @LogExecutionTime  
+  public synchronized void processTransaction(ProcessTransactionDTO dto)
       throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
     System.out.println("Inicio-----------");
     Card card = dto.getCard();

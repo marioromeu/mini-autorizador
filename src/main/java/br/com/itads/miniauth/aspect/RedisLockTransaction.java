@@ -1,4 +1,4 @@
-package br.com.itads.miniauth.aspect.interfaces;
+package br.com.itads.miniauth.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * @email  mario.romeu@gmail.com
  *
  */
-@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LogExecutionTime {
+@Target(value = {ElementType.METHOD, ElementType.TYPE})
+public @interface RedisLockTransaction {
 }
