@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -21,14 +22,15 @@ import org.slf4j.LoggerFactory;
  * @email  mario.romeu@gmail.com
  *
  */
+@Component 
 @Aspect
-public class PerformanceAspect {
+public class LogExecutionTimeAspect {
 
   /**
    * 
    */
-  private static final Logger log = LoggerFactory.getLogger(PerformanceAspect.class);
-
+  private static final Logger log = LoggerFactory.getLogger(LogExecutionTimeAspect.class); 
+  
   /**
    * 
    * @param joinPoint
@@ -45,7 +47,6 @@ public class PerformanceAspect {
     long executionTime = System.currentTimeMillis() - start;
 
     log.info(joinPoint.getSignature().getName() + " executed in " + executionTime + "ms");
-    System.out.println(joinPoint.getSignature().getName() + " executed in " + executionTime + "ms");
     
     return proceed;
 

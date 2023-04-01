@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
+import br.com.itads.miniauth.aspect.LogExecutionTime;
+import br.com.itads.miniauth.aspect.MethodLogging;
 import br.com.itads.miniauth.controller.interfaces.CardControllerInterface;
 import br.com.itads.miniauth.dto.CardDTO;
 import br.com.itads.miniauth.exception.CardAlreadyExistsException;
@@ -33,6 +35,8 @@ public class CardController implements CardControllerInterface {
   /**
    * 
    */
+  @LogExecutionTime
+  @MethodLogging
   public ResponseEntity<CardResponse> createNewCard(
       MultiValueMap<String, String> header,
       CardDTO body) {
@@ -74,6 +78,8 @@ public class CardController implements CardControllerInterface {
   /**
    * 
    */
+  @LogExecutionTime  
+  @MethodLogging  
   public ResponseEntity<Double> findCardByNumber(MultiValueMap<String, String> header,
       String numeroCartao) {
 

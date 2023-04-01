@@ -16,7 +16,6 @@ import br.com.itads.miniauth.exception.TransactionNotAllowedException;
  */
 public interface TransactionService {
 
-
   /**
    * 
    * @param cardDTO
@@ -27,7 +26,7 @@ public interface TransactionService {
    * @throws PasswordInvalidException 
    * @throws NoRefundsException 
    * @throws TransactionNotAllowedException 
-   */
-  void createNewTransaction(TransactionDTO body) throws CardNotFoundException, PasswordInvalidException, NoRefundsException, TransactionNotAllowedException;
-  
+   */ 
+  void processTransaction(TransactionDTO body) throws CardNotFoundException, PasswordInvalidException, NoRefundsException, TransactionNotAllowedException;
+
 }

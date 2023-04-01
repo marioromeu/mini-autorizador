@@ -13,14 +13,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL57Dialect
 
+logging:
+  level:
+    root: INFO
     
-springfox:
-  documentation:
-    swagger:
-      v2:
-        path: /api-docs    
-    
+redis:
+  host: ${REDIS_HOST:127.0.0.1}
+  port: 6379    

@@ -2,7 +2,7 @@ package br.com.itads.miniauth.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import br.com.itads.miniauth.aspect.LogExecutionTime;
+import br.com.itads.miniauth.aspect.RedisLockTransaction;
 import br.com.itads.miniauth.dto.ProcessTransactionDTO;
 import br.com.itads.miniauth.dto.TransactionDTO;
 import br.com.itads.miniauth.exception.CardAlreadyExistsException;
@@ -15,6 +15,7 @@ import br.com.itads.miniauth.model.Card;
 import br.com.itads.miniauth.services.interfaces.CardService;
 import br.com.itads.miniauth.services.interfaces.TransactionService;
 import br.com.itads.miniauth.util.SecurityUtils;
+import br.com.itads.miniauth.util.ThreadUtils;
 
 /**
  * 
@@ -40,17 +41,20 @@ public class TransactionServiceImpl implements TransactionService {
    * @throws TransactionNotAllowedException 
    * 
    */
-  public void createNewTransaction(TransactionDTO dto)
+  @RedisLockTransaction  
+  public void processTransaction(TransactionDTO dto)
       throws CardNotFoundException, PasswordInvalidException, NoRefundsException, TransactionNotAllowedException {
 
     try {
 
+      //Consulta o cartão
       Card card = cardService.findCardByNumber(dto.getNumeroCartao());
 
+      //Criptografa a senha informada na api
       SecurityUtils.isPasswordValid(card.getPassword(), dto.getSenhaCartao());
 
       /**
-       * Se ha recurso...
+       * Se há saldo...
        */
       if (card.getFunds() > dto.getValor()) {
         
@@ -59,9 +63,27 @@ public class TransactionServiceImpl implements TransactionService {
                               .card(card)
                               .valueOfTransaction(dto.getValor())
                               .build();
+        
+        Double valueOfTransaction = processTransactionDTO.getValueOfTransaction();
+        
+        card.debit(valueOfTransaction);
 
-        processTransaction(processTransactionDTO);
+        Object lock = new Object();
 
+        /**
+         * sleep para ajudar a perceber o 
+         * paralelismo e concorrencia de requisicoes 
+         */
+        ThreadUtils.sleepFor1Sec();
+        
+        //debita no banco de dados
+        synchronized (lock) {      
+          cardService.debitValue(card);  
+        }
+
+        /**
+         * Se não há saldo
+         */
       } else {
         throw new NoRefundsException();
       }
@@ -71,36 +93,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     } catch (CardAlreadyExistsException e) {
       throw new TransactionNotAllowedException();
-
     }
 
-  }
-
-  /**
-   * @throws InvalidCardFormatException
-   * @throws CardAlreadyExistsException
-   * 
-   */
-  //@RedisLockTransaction
-  @LogExecutionTime  
-  public synchronized void processTransaction(ProcessTransactionDTO dto)
-      throws NoRefundsException, CardAlreadyExistsException, InvalidCardFormatException {
-    System.out.println("Inicio-----------");
-    Card card = dto.getCard();
-    
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    
-    Double valueOfTransaction = dto.getValueOfTransaction();
-    
-    card.debit(valueOfTransaction);
-
-    cardService.debitValue(card);
-    System.out.println("-----------FIM");
   }
 
 }

@@ -70,7 +70,7 @@ public class TransactionServiceTest {
     
     TransactionDTO dto = TransactionBuilder.buildNewTransactionDTOLikeReadMe();
     
-    assertDoesNotThrow(() -> transactionService.createNewTransaction(dto));
+    assertDoesNotThrow(() -> transactionService.processTransaction(dto));
 
   }
 
@@ -89,7 +89,7 @@ public class TransactionServiceTest {
     
     TransactionDTO dto = TransactionBuilder.buildNewTransactionDTOWithoutFunds();
 
-    assertThrows(NoRefundsException.class, () -> transactionService.createNewTransaction(dto));
+    assertThrows(NoRefundsException.class, () -> transactionService.processTransaction(dto));
 
   }
   
