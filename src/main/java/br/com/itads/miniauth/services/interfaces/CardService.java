@@ -21,7 +21,7 @@ public interface CardService {
    * @throws InvalidCardFormatException 
    * @throws CardAlreadyExists
    */
-  void createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException;
+  Card createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException;
   
 
   /**

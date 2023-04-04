@@ -31,7 +31,7 @@ public class CardServiceImpl implements CardService {
    * @throws InvalidCardFormatException 
    * 
    */
-  public void createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException {
+  public Card createNewCard(CardDTO cardDTO) throws CardAlreadyExistsException, InvalidCardFormatException {
 
     Card card = Card.builder()
         .funds(500d)
@@ -41,6 +41,8 @@ public class CardServiceImpl implements CardService {
 
     save(card);
 
+    return card;
+    
   }
 
   /**
@@ -55,7 +57,7 @@ public class CardServiceImpl implements CardService {
     
     try {
       card = repository.findCardByNumber(cardNumber);
-      card.getId();// TODO Melhorar
+      card.getId();// TODO Melhorar : Usar Optional
 
     } catch (NullPointerException e) {
       throw new CardNotFoundException();

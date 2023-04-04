@@ -6,7 +6,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import br.com.itads.miniauth.cache.RedisCacheRepository;
 import br.com.itads.miniauth.dto.TransactionDTO;
 import br.com.itads.miniauth.util.ThreadUtils;
@@ -22,7 +21,6 @@ import br.com.itads.miniauth.util.ThreadUtils;
  * @email mario.romeu@gmail.com
  *
  */
-@Component
 @Aspect
 public class RedisAspect {
 

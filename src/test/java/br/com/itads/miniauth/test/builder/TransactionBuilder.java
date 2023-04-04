@@ -42,6 +42,36 @@ public class TransactionBuilder extends GenericBuilder {
    * 
    * @return
    */
+  public static final TransactionDTO buildNewTransactionDTOCardNotFound() {
+    
+    TransactionDTO transactionDTO = TransactionDTO.builder()
+        .valor(100d)
+        .numeroCartao("?????????")
+        .senhaCartao(defaultPassword)        
+        .build();
+
+    return transactionDTO;
+  }   
+  
+  /**
+   * 
+   * @return
+   */
+  public static final TransactionDTO buildNewTransactionWithCardWrongPasswd() {
+    
+    TransactionDTO transactionDTO = TransactionDTO.builder()
+        .valor(100d)
+        .numeroCartao(defaultCardNumber)
+        .senhaCartao("????")
+        .build();
+
+    return transactionDTO;
+  }    
+  
+  /**
+   * 
+   * @return
+   */
   public static final TransactionDTO buildNewTransactionDTOWithoutFunds() {
 
     TransactionDTO transactionDTO = TransactionDTO.builder()

@@ -8,7 +8,7 @@ import br.com.itads.miniauth.util.SecurityUtils;
  * @email  mario.romeu@gmail.com
  *
  */
-public class GenericBuilder {
+public abstract class GenericBuilder {
 
   /**
    * 

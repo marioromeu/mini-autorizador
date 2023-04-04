@@ -1,5 +1,6 @@
 package br.com.itads.miniauth.test.builder;
 
+import br.com.itads.miniauth.dto.CardDTO;
 import br.com.itads.miniauth.model.Card;
 
 /**
@@ -14,6 +15,17 @@ public class CardBuilder extends GenericBuilder {
    * 
    * @return
    */
+  public static final CardDTO buildCardDTOBasedOnCard(Card card) {
+    return CardDTO.builder()
+        .numeroCartao(card.getNumber())
+        .senha(card.getPassword())
+        .build();
+  }  
+  
+  /**
+   * 
+   * @return
+   */
   public static final Card buildNewCardWithNumber0() {
     return Card.builder()
         .id(1l)
@@ -22,6 +34,44 @@ public class CardBuilder extends GenericBuilder {
         .password(encryptedDefaultPassword)
         .build();
   }
+  
+  /**
+   * 
+   * @return
+   */
+  public static final Card buildNewInvalidCard() {
+    
+    Double d = Math.random()* 10000;
+    Long idLong = d.longValue();
+    
+    Card card = Card.builder()
+        .id(idLong)
+        .funds(500d)
+        .number(defaultCardNumber+1)
+        .password(encryptedDefaultPassword)
+        .build();
+
+    return card;
+  }   
+
+  /**
+   * 
+   * @return
+   */
+  public static final Card buildNewCardCleanPassword() {
+    
+    Double d = Math.random()* 10000;
+    Long idLong = d.longValue();
+    
+    Card card = Card.builder()
+        .id(idLong)
+        .funds(500d)
+        .number(defaultCardNumber)
+        .password(defaultPassword)
+        .build();
+
+    return card;
+  }   
   
   /**
    * 

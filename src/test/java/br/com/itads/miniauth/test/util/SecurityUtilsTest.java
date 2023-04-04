@@ -3,6 +3,8 @@ package br.com.itads.miniauth.test.util;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import br.com.itads.miniauth.exception.PasswordInvalidException;
 import br.com.itads.miniauth.util.SecurityUtils;
 
@@ -11,6 +13,7 @@ import br.com.itads.miniauth.util.SecurityUtils;
  * @author marioromeu
  * @email mario.romeu@gmail.com
  */
+@ExtendWith(SpringExtension.class)
 public class SecurityUtilsTest {
 
   @Test
